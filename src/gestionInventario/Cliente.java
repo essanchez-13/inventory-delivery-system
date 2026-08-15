@@ -2,6 +2,7 @@ package gestionInventario;
 
 //Clase Cliente: representa a un cliente de la tienda y es el nodo de la ColaClientes.
 //Cada cliente tiene su propio carrito, que es una ListaProductos (lista enlazada).
+//Ademas tiene una ubicacion, que es el vertice del Grafo desde donde se le hace la entrega.
 public class Cliente {
 
     //Atributos
@@ -9,11 +10,18 @@ public class Cliente {
     private int prioridad;            // 1 = basico, 2 = afiliado, 3 = premium
     private ListaProductos carrito;   // carrito personal del cliente
     private Cliente siguiente;        // siguiente cliente en la cola
+    private String ubicacion;         // ubicacion del cliente (vertice del Grafo) para la entrega
 
-    //Metodo constructor
+    //Constructor de 2 parametros (compatibilidad): la ubicacion se asigna despues con setUbicacion
     public Cliente(String nombre, int prioridad) {
+        this(nombre, prioridad, null);
+    }
+
+    //Constructor de 3 parametros: crea el cliente ya con su ubicacion
+    public Cliente(String nombre, int prioridad, String ubicacion) {
         this.nombre = nombre;
         this.prioridad = prioridad;
+        this.ubicacion = ubicacion;
         this.carrito = new ListaProductos();
         this.siguiente = null;
     }
@@ -40,6 +48,10 @@ public class Cliente {
         return siguiente;
     }
 
+    public String getUbicacion() {
+        return ubicacion;
+    }
+
     //Setters
     public void setNombre(String nombre) {
         this.nombre = nombre;
@@ -53,12 +65,17 @@ public class Cliente {
         this.siguiente = siguiente;
     }
 
+    public void setUbicacion(String ubicacion) {
+        this.ubicacion = ubicacion;
+    }
+
     //toString
     public String toString() {
         String tipo;
         if (prioridad == 3) tipo = "Premium";
         else if (prioridad == 2) tipo = "Afiliado";
         else tipo = "Basico";
-        return "Cliente: " + nombre + " (prioridad " + prioridad + " - " + tipo + ")";
+        String ubic = (ubicacion == null) ? "sin ubicacion" : ubicacion;
+        return "Cliente: " + nombre + " (prioridad " + prioridad + " - " + tipo + ") | Ubicacion: " + ubic;
     }
 }
