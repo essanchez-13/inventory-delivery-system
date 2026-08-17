@@ -24,6 +24,7 @@ public class Main {
             System.out.println("2. Registrar Cliente y Llenar Carrito (Encolar)");
             System.out.println("3. Atender Siguiente Cliente (Procesar Factura)");
             System.out.println("4. Ver Cola de Clientes en Espera");
+            System.out.println("5. Gestión del Mapa de Entregas (Grafo)");
             System.out.println("0. Salir del Programa");
             System.out.print("Seleccione una opcion: ");
             opcion = scanner.nextInt();
@@ -41,6 +42,9 @@ public class Main {
                 case 4:
                     tienda.getColaClientes().mostrarCola();
                     break;
+                case 5:
+                    menuMapa(scanner);
+                    break;
                 case 0:
                     System.out.println("¡Hasta luego!");
                     break;
@@ -50,6 +54,52 @@ public class Main {
         }
 
         scanner.close();
+    }
+
+    //Menu del mapa
+    // Menú para gestionar el Grafo (Vértices y Aristas)
+    private static void menuMapa(Scanner scanner) {
+        int opcion = -1;
+        while (opcion != 0) {
+            System.out.println("\n=== Gestión del Mapa de Entregas ===");
+            System.out.println("1. Ver mapa actual (Rutas disponibles)");
+            System.out.println("2. Agregar nueva ubicación aislada (Vértice)");
+            System.out.println("3. Agregar nueva ruta entre ubicaciones (Arista)");
+            System.out.println("0. Volver al Menú Principal");
+            System.out.print("Seleccione una opción: ");
+            opcion = scanner.nextInt();
+            scanner.nextLine();
+
+            switch (opcion) {
+                case 1:
+                    System.out.println("\n--- MAPA DE ENTREGAS ---");
+                    tienda.getMapaEntregas().mostrarGrafo();
+                    break;
+                case 2:
+                    System.out.print("Ingrese el nombre de la nueva ubicación: ");
+                    String nuevaUbicacion = scanner.nextLine();
+                    tienda.getMapaEntregas().agregarVertice(nuevaUbicacion);
+                    System.out.println("Ubicación agregada exitosamente.");
+                    break;
+                case 3:
+                    System.out.print("Ingrese la ubicación de ORIGEN: ");
+                    String origen = scanner.nextLine();
+                    System.out.print("Ingrese la ubicación de DESTINO: ");
+                    String destino = scanner.nextLine();
+                    System.out.print("Ingrese la distancia (peso) en km: ");
+                    int peso = scanner.nextInt();
+                    scanner.nextLine();
+
+                    tienda.getMapaEntregas().agregarArista(origen, destino, peso);
+                    System.out.println("Ruta agregada exitosamente entre " + origen + " y " + destino + ".");
+                    break;
+                case 0:
+                    System.out.println("Volviendo al menú principal...");
+                    break;
+                default:
+                    System.out.println("Opción inválida.");
+            }
+        }
     }
 
     //Menu del administrador
@@ -167,8 +217,14 @@ public class Main {
             return;
         }
 
+        System.out.print("Ubicacion del cliente (ej: Cartago, Heredia, Escazu): ");
+        String ubicacionCliente = scanner.nextLine();
+
         // Crear el objeto cliente
-        Cliente nuevoCliente = new Cliente(nombreCliente, prioridad);
+        Cliente nuevoCliente = new Cliente(nombreCliente, prioridad, ubicacionCliente);
+
+        //Agregamos el vertice de la ubicacion del cliente de forma automatica
+        tienda.getMapaEntregas().agregarVertice(ubicacionCliente);
 
         // Hacemos un submenu para gestionar el Carrito de Compras que va a estar enlazado a ListaProductos
         int opcCarrito = -1;
@@ -290,21 +346,39 @@ public class Main {
     private static void atenderSiguienteCliente() {
         System.out.println("\n=== DESENCOLANDO Y ATENDIENDO CLIENTE ===");
 
-        // Sacamos al cliente correspondiente
-        Cliente atendido = tienda.getColaClientes().atender();
+        // 1. Vemos quién es el próximo sin sacarlo de la cola
+        Cliente proximo = tienda.getColaClientes().verFrente();
 
-        //Imprimimos la factura de las ventas
-        if (atendido != null) {
+        if (proximo != null) {
+            String destino = proximo.getUbicacion();
+            String origen = tienda.getUbicacion();
+
+            // 2. Verificamos la distancia
+            int distancia = tienda.getMapaEntregas().distanciaMasCorta(origen, destino);
+
+            // 3. Validamos la conectividad
+            if (distancia == Integer.MAX_VALUE) {
+                System.out.println("\n¡ALERTA! Operación denegada.");
+                System.out.println("La ubicación del cliente (" + destino + ") no está conectada al mapa de entregas.");
+                System.out.println("Por favor, agregue una ruta en el mapa hacia esta ubicación antes de atenderlo.");
+                return; // Cortamos la ejecución, el cliente se queda en la cola
+            }
+
+            // 4. Si hay conexión, procedemos a sacarlo (atenderlo)
+            Cliente atendido = tienda.getColaClientes().atender();
+
+            // Imprimimos la factura de las ventas
             System.out.println("========================================");
             System.out.println("           FACTURA DE VENTA             ");
             System.out.println("========================================");
-            // El toString() de Cliente ya maneja el formato de Nombre y Tipo de prioridad
             System.out.println(atendido);
             System.out.println("----------------------------------------");
 
-            // Invocamos el reporte de costos de la estructura ListaProductos propia del cliente
             atendido.getCarrito().reporteCostos();
             System.out.println("========================================");
+
+            // 5. Procesamos la entrega (Muestra la ruta de Dijkstra)
+            tienda.procesarEntrega(atendido);
         }
     }
 }

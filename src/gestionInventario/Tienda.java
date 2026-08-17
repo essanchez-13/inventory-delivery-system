@@ -17,12 +17,7 @@ public class Tienda {
         this.mapaEntregas = new Grafo();
         this.ubicacion = "SanPedro"; // la tienda esta ubicada en este vertice
 
-        // ===================== MAPA PROVISIONAL (TEMPORAL) =====================
-        // Solo sirve para poder DEMOSTRAR la ruta de entrega (parte de Azarela).
-        // OJO Andres: en tu parte (lo verde) reemplaza/amplia esto por el mapa real
-        // y por la opcion del menu para agregar ubicaciones y rutas.
-        cargarMapaProvisional();
-        // =======================================================================
+        cargarMapaPredefinido();
     }
 
     // Getters para que puedas usarlas desde el Main
@@ -79,9 +74,9 @@ public class Tienda {
         System.out.println("Distancia total del recorrido: " + distancia + " km");
     }
 
-    // ---- Mapa provisional de prueba (TEMPORAL, lo reemplaza Andres) ----
-    // Un mapita basico de ubicaciones con distancias, para probar las rutas de entrega.
-    private void cargarMapaProvisional() {
+    //Este va a ser un mapa predefinido con ciertas rutas y con distancias para poder hacer pruebas con datos ya establecidos y no tener que ingresar todo desde 0
+    // Un mapa basico de ubicaciones con distancias, para probar las rutas de entrega.
+    private void cargarMapaPredefinido() {
         mapaEntregas.agregarArista("SanPedro", "SanJose", 4);
         mapaEntregas.agregarArista("SanJose", "Heredia", 8);
         mapaEntregas.agregarArista("SanJose", "Escazu", 9);
