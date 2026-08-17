@@ -22,7 +22,7 @@ public class Main {
             System.out.println("\n=== SISTEMA DE GESTIÓN DE INVENTARIO Y VENTAS ===");
             System.out.println("1. Gestión del Inventario (Administrador)");
             System.out.println("2. Registrar Cliente y Llenar Carrito (Encolar)");
-            System.out.println("3. Atender Siguiente Cliente (Procesar Factura)");
+            System.out.println("3. Atender Siguiente Cliente (Procesar Factura y dar mejor ruta)");
             System.out.println("4. Ver Cola de Clientes en Espera");
             System.out.println("5. Gestión del Mapa de Entregas (Grafo)");
             System.out.println("0. Salir del Programa");
