@@ -1,52 +1,52 @@
-# Sistema de Gestión de Inventarios
+# Sistema de Gestión de Inventarios y Entregas
 
 ## Descripción
 
-Aplicación desarrollada en Java para la gestión de inventarios de una tienda en línea.
+Aplicación desarrollada en Java para la gestión integral de inventarios, carritos de compras, atención de clientes por prioridad y cálculo de rutas de entrega para una tienda en línea.
 
-Este proyecto corresponde al **Primer Avance del Proyecto de Estructuras de Datos (SOFT-10)** de la Universidad CENFOTEC.
+Este proyecto corresponde a la **Proyecto de Estructuras de Datos (SOFT-10) - Gestión de Inventario** de la Universidad CENFOTEC.
 
-La aplicación implementa una **Lista Enlazada Simple** para administrar productos dentro del inventario, permitiendo registrar, modificar, eliminar y consultar información de los productos almacenados.
+La aplicación evoluciona desde una lista enlazada simple hasta la implementación de **múltiples estructuras de datos complejas**, logrando un sistema robusto que administra productos, simula la atención de clientes mediante prioridades y calcula las rutas de entrega más eficientes utilizando teoría de grafos.
 
 ---
 
 ## Objetivos del Proyecto
 
-- Implementar estructuras de datos dinámicas.
-- Aplicar listas enlazadas simples para la gestión de inventarios.
-- Desarrollar un menú interactivo mediante consola (CLI).
-- Gestionar productos utilizando operaciones CRUD.
-- Aplicar buenas prácticas de programación orientada a objetos.
+- Implementar e integrar múltiples estructuras de datos dinámicas complejas (Listas, Árboles, Colas, Grafos).
+- Optimizar la búsqueda y gestión de inventarios utilizando un **Árbol Binario de Búsqueda (ABB)**.
+- Gestionar el orden de atención de usuarios mediante una **Cola de Prioridad**.
+- Calcular rutas de entrega óptimas implementando el **Algoritmo de Dijkstra** en un **Grafo Ponderado no Dirigido**.
+- Desarrollar un menú interactivo mediante consola (CLI) amigable e intuitivo.
+- Aplicar buenas prácticas de programación orientada a objetos (POO).
 
 ---
 
 ## Funcionalidades Implementadas
 
-### Gestión de Productos
+### 1. Gestión del Inventario (Administrador)
+Administrado a través de un **Árbol Binario de Búsqueda (ABB)** para mayor eficiencia.
+- Insertar, buscar, modificar y eliminar productos.
+- Agregar rutas de imágenes a los productos.
+- Mostrar catálogo completo ordenado alfabéticamente.
 
-- Agregar productos al inicio de la lista.
-- Agregar productos al final de la lista.
-- Buscar productos.
-- Modificar productos existentes.
-- Eliminar productos.
-- Mostrar inventario completo.
+### 2. Gestión de Clientes y Carrito de Compras
+El carrito de cada cliente funciona mediante una **Lista Enlazada Simple**.
+- Registro de clientes con diferentes niveles de prioridad (Básico, Afiliado, Premium) y ubicación geográfica.
+- Añadir, modificar cantidades y eliminar productos del carrito (vinculado dinámicamente al stock del inventario principal).
+- Reporte detallado de costos y subtotales por cliente.
 
-### Gestión de Imágenes
+### 3. Cola de Atención (Cajas)
+Implementada mediante una **Cola de Prioridad**.
+- Encolado automático de clientes al finalizar sus compras.
+- Desencolado y facturación respetando el nivel de prioridad de cada cliente (y el orden de llegada en caso de empate).
+- Visualización de los clientes en espera.
 
-Cada producto puede almacenar múltiples imágenes mediante una lista dinámica (`ArrayList<String>`).
-
-- Agregar rutas de imágenes.
-- Consultar imágenes asociadas a un producto.
-
-### Reportes
-
-- Mostrar información detallada de cada producto.
-- Calcular costo total por producto según su cantidad.
-- Calcular costo acumulado total del inventario.
-
-### Menú de Consola
-
-La aplicación cuenta con un menú interactivo que permite acceder a todas las funcionalidades disponibles desde la terminal.
+### 4. Mapa de Entregas (Grafos)
+El mapa de la ciudad está estructurado en un **Grafo Ponderado No Dirigido**.
+- Creación automática de vértices según la ubicación del cliente.
+- Menú de gestión para agregar nuevas ubicaciones aisladas y rutas (aristas) con distancias (pesos).
+- Validación de conectividad: el sistema bloquea la facturación si la ubicación del cliente no está conectada al mapa.
+- Cálculo e impresión de la ruta de entrega más corta utilizando el **Algoritmo de Dijkstra**.
 
 ---
 
@@ -58,53 +58,12 @@ src/
 ├── Main.java
 │
 ├── gestionInventario/
-│   ├── Producto.java
-│   ├── ListaProductos.java
-
-```
-
----
-
-## Datos del Producto
-
-Cada producto almacena:
-
-| Atributo | Descripción |
-|-----------|------------|
-| Nombre | Nombre del producto |
-| Precio | Precio unitario |
-| Categoría | Categoría del producto |
-| Fecha de Registro / Vencimiento | Fecha asociada al producto |
-| Cantidad | Existencias disponibles |
-| Lista de Imágenes | Rutas de imágenes asociadas |
-
----
-
-## Integrantes
-
-- **Andrés Gabriel Meléndez Carvajal**
-- **Esteban Sánchez Sánchez**
-- **Azarela Fernández Sibaja**
-
----
-
-## Curso
-
-**SOFT-10 – Estructuras de Datos**  
-Universidad CENFOTEC  
-Docente: **Romario Salas Cerdas**
-
----
-
-## Estado del Proyecto
-
-✅ Primer avance completado
-
-Implementación de:
-
-- Clase Producto
-- Nodo de lista enlazada
-- Lista enlazada simple
-- Operaciones CRUD
-- Menú principal
-- Reporte de costos
+│   ├── ArbolProductos.java    (Inventario de la Tienda)
+│   ├── Arista.java            (Conexiones del mapa)
+│   ├── Cliente.java           (Entidad Cliente con su carrito)
+│   ├── ColaClientes.java      (Cola de prioridad para atención)
+│   ├── Grafo.java             (Mapa de entregas y Dijkstra)
+│   ├── ListaProductos.java    (Carrito de compras)
+│   ├── Producto.java          (Entidad Producto)
+│   ├── Tienda.java            (Estructura central que unifica el sistema)
+│   └── Vertice.java           (Ubicaciones del mapa)
