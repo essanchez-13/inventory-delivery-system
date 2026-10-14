@@ -1,69 +1,50 @@
-# Sistema de Gestión de Inventarios y Entregas
+# Inventory & Delivery Management System
 
-## Descripción
+A Java console application for an online store. It manages the product inventory, customer shopping carts, priority-based checkout and shortest-path delivery routing. The core structures (linked list, binary search tree and priority queue) are implemented from scratch with hand-built nodes.
 
-Aplicación desarrollada en Java para la gestión integral de inventarios, carritos de compras, atención de clientes por prioridad y cálculo de rutas de entrega para una tienda en línea.
+Team project for *Data Structures (SOFT-10)* at Universidad CENFOTEC, 2026.
 
-Este proyecto corresponde a la **Proyecto de Estructuras de Datos (SOFT-10) - Gestión de Inventario** de la Universidad CENFOTEC.
+**Stack:** Java · OOP · custom linked list, binary search tree, priority queue and weighted graph · Dijkstra's algorithm
 
-La aplicación evoluciona desde una lista enlazada simple hasta la implementación de **múltiples estructuras de datos complejas**, logrando un sistema robusto que administra productos, simula la atención de clientes mediante prioridades y calcula las rutas de entrega más eficientes utilizando teoría de grafos.
+## Features
 
----
+| Module | Data structure | What it does |
+|---|---|---|
+| Inventory (admin) | **Binary search tree** (`ArbolProductos`) | Insert, search, update and delete products in O(log n) on average; in-order traversal lists the catalog alphabetically |
+| Shopping cart | **Singly linked list** (`ListaProductos`) | Add, update quantities and remove items; stock stays in sync with the inventory |
+| Checkout | **Priority queue** (`ColaClientes`) | Serves Premium, then Affiliate, then Basic customers, using FIFO order to break ties |
+| Delivery map | **Weighted undirected graph** (`Grafo`) | Add locations and routes, block checkout when a customer's location is unreachable, and print the shortest delivery route with **Dijkstra's algorithm** |
 
-## Objetivos del Proyecto
-
-- Implementar e integrar múltiples estructuras de datos dinámicas complejas (Listas, Árboles, Colas, Grafos).
-- Optimizar la búsqueda y gestión de inventarios utilizando un **Árbol Binario de Búsqueda (ABB)**.
-- Gestionar el orden de atención de usuarios mediante una **Cola de Prioridad**.
-- Calcular rutas de entrega óptimas implementando el **Algoritmo de Dijkstra** en un **Grafo Ponderado no Dirigido**.
-- Desarrollar un menú interactivo mediante consola (CLI) amigable e intuitivo.
-- Aplicar buenas prácticas de programación orientada a objetos (POO).
-
----
-
-## Funcionalidades Implementadas
-
-### 1. Gestión del Inventario (Administrador)
-Administrado a través de un **Árbol Binario de Búsqueda (ABB)** para mayor eficiencia.
-- Insertar, buscar, modificar y eliminar productos.
-- Agregar rutas de imágenes a los productos.
-- Mostrar catálogo completo ordenado alfabéticamente.
-
-### 2. Gestión de Clientes y Carrito de Compras
-El carrito de cada cliente funciona mediante una **Lista Enlazada Simple**.
-- Registro de clientes con diferentes niveles de prioridad (Básico, Afiliado, Premium) y ubicación geográfica.
-- Añadir, modificar cantidades y eliminar productos del carrito (vinculado dinámicamente al stock del inventario principal).
-- Reporte detallado de costos y subtotales por cliente.
-
-### 3. Cola de Atención (Cajas)
-Implementada mediante una **Cola de Prioridad**.
-- Encolado automático de clientes al finalizar sus compras.
-- Desencolado y facturación respetando el nivel de prioridad de cada cliente (y el orden de llegada en caso de empate).
-- Visualización de los clientes en espera.
-
-### 4. Mapa de Entregas (Grafos)
-El mapa de la ciudad está estructurado en un **Grafo Ponderado No Dirigido**.
-- Creación automática de vértices según la ubicación del cliente.
-- Menú de gestión para agregar nuevas ubicaciones aisladas y rutas (aristas) con distancias (pesos).
-- Validación de conectividad: el sistema bloquea la facturación si la ubicación del cliente no está conectada al mapa.
-- Cálculo e impresión de la ruta de entrega más corta utilizando el **Algoritmo de Dijkstra**.
-
----
-
-## Estructura del Proyecto
+## Structure
 
 ```text
 src/
-│
-├── Main.java
-│
-├── gestionInventario/
-│   ├── ArbolProductos.java    (Inventario de la Tienda)
-│   ├── Arista.java            (Conexiones del mapa)
-│   ├── Cliente.java           (Entidad Cliente con su carrito)
-│   ├── ColaClientes.java      (Cola de prioridad para atención)
-│   ├── Grafo.java             (Mapa de entregas y Dijkstra)
-│   ├── ListaProductos.java    (Carrito de compras)
-│   ├── Producto.java          (Entidad Producto)
-│   ├── Tienda.java            (Estructura central que unifica el sistema)
-│   └── Vertice.java           (Ubicaciones del mapa)
+├── Main.java                 interactive CLI menu (admin / customer)
+└── gestionInventario/
+    ├── Tienda.java           facade tying all modules together
+    ├── Producto.java         product entity / BST node
+    ├── ArbolProductos.java   inventory BST
+    ├── ListaProductos.java   shopping cart linked list
+    ├── Cliente.java          customer with cart, priority and location
+    ├── ColaClientes.java     checkout priority queue
+    ├── Grafo.java            delivery map + Dijkstra
+    ├── Vertice.java          map location
+    └── Arista.java           weighted route
+```
+
+## Running
+
+Open the project in IntelliJ IDEA and run `Main`, or compile from the command line:
+
+```bash
+javac -d out $(find src -name "*.java")
+java -cp out Main
+```
+
+## Team and contributions
+
+- **Esteban Sánchez**: the `Producto` model, the original linked list (insertion and search, inserting at a chosen position), and the **binary search tree inventory** that replaced the list.
+- **Azarela Fernández**: list operations and the admin/customer menus, the customer priority queue, and customer locations with Dijkstra routing at checkout.
+- **Andrés Meléndez**: menu integration, documentation and the final merge.
+
+Mirrored from the original team repository, [essanchezs/GestionInventario](https://github.com/essanchezs/GestionInventario), with the full commit history preserved.
